@@ -1,9 +1,10 @@
 let userName = '........';
 const displayName = document.getElementById("name")
+const joinChatButton = document.getElementById("join-chat-button")
 
 function getRandomNames(allTheNames) {
   let randomNames = []
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 40; i++) {
     randomNames.push(allTheNames[Math.floor(Math.random() * allTheNames.length)])
   }
   return randomNames
@@ -19,14 +20,14 @@ const fetchNames = async () => {
 const startNameGenerator = async() => {
   let names = await fetchNames()
   userName = names[names.length-1]
-  for (let i=0; i<20; i++) {
+  for (let i=0; i<40; i++) {
     timer(i, names[i])
   }
   function timer(i, name) { 
    setTimeout(function() { 
-    console.log(displayName)
     displayName.innerHTML = name
-   }, 6 * i * i ) 
+    if (userName === name) joinChatButton.style.display = 'block'
+   }, 4 * i * i ) 
  } 
 }
 
