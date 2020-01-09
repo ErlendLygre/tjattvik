@@ -15,20 +15,40 @@ h3 {
 }
 
 img {
-  margin: 0 auto;
   align-self: center;
+}
+
+#landing-content, #chat-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 45vh;
+  width: 400px;
+  margin: 0 auto;
+  background-color: rgb(255, 250, 250, 0.8);
+  border-radius: 20px;
+  padding: 40px;
+}
+
+#chat-content {
+  display: none;
 }
 
 #join-chat-button {
   display: none;
   margin-top: 50px;
   font-size: 1.1rem;
-  background-image: linear-gradient(to top right, #10A69A, #0B3F56);
-  box-shadow: 3px 3px 16px darkgrey;
   color: snow;
   font-weight: 700;
+  letter-spacing: 0.1rem;
   padding: 10px;
   border-radius: 5px;
+  background-image: linear-gradient(to top right, rgb(11, 112, 104), #3CBBC9);
+  box-shadow: 3px 3px 16px darkgrey;
+}
+
+#join-chat-button:hover {
+  opacity: 0.65;
+  transition: opacity 0.3s linear;
 }
 
 #name {
@@ -37,13 +57,3 @@ img {
   margin-top: 20px;
 }
 
-.main-content {
-  display: flex;
-  flex-direction: column;
-  min-height: 80vh;
-  width: 400px;
-  margin: 0 auto;
-  background-color: rgb(255, 250, 250, 0.8);
-  border-radius: 20px;
-  padding: 40px;
-}

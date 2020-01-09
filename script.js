@@ -1,6 +1,8 @@
 let userName = '........';
 const displayName = document.getElementById("name")
 const joinChatButton = document.getElementById("join-chat-button")
+const landingContent = document.getElementById("landing-content")
+const chatContent = document.getElementById("chat-content")
 
 function getRandomNames(allTheNames) {
   let randomNames = []
@@ -27,8 +29,14 @@ const startNameGenerator = async() => {
    setTimeout(function() { 
     displayName.innerHTML = name
     if (userName === name) joinChatButton.style.display = 'block'
-   }, 4 * i * i ) 
- } 
+   }, 1 * i * i ) 
+ }
+}
+
+function startChat() {
+  
+  landingContent.style.display = 'none'
+  chatContent.style.display = 'flex'
 }
 
 startNameGenerator()
