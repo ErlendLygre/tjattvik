@@ -1,10 +1,53 @@
 let generatedUserName = '........';
-const displayName = document.getElementById("name")
+const displayGeneratedName = document.getElementById("name")
 const joinChatButton = document.getElementById("join-chat-button")
 const landingContent = document.getElementById("landing-content")
 const chatContent = document.getElementById("chat-content")
+const chat = document.getElementById("chat")
+const chatInput = document.getElementById("chatInput")
 
-function getRandomNames(allTheNames) {
+firebase.database().ref('messages').limitToLast(10)
+    .on('value', (value) => {
+      let messageKeys = Object.keys(value.val())
+      let messagesArray = []
+      messageKeys.forEach(key => {
+        let userNameAndMessagePair = []
+        userNameAndMessagePair.push(value.val()[key].displayName)
+        userNameAndMessagePair.push(value.val()[key].message)
+        messagesArray.push(userNameAndMessagePair)
+      })
+      populateChat(messagesArray)
+    })
+
+chatInput.addEventListener("keyup", function(event) {
+  if (event.keyCode === 13) {
+      event.preventDefault()
+      document.getElementById("send-message-button").click()
+      chatInput.value = ''
+  }
+});
+
+function populateChat(messagesToPopulate) {
+  chat.innerHTML = ''
+  messagesToPopulate.forEach(message => {
+    chat.innerHTML += `<p>${message[0]} ${message[1]}</p>`
+  })
+}
+
+function writeMessageToDatabase(name, message) {
+  firebase.database().ref('messages').push({ 
+    message: message, 
+    displayName: name
+  })
+}
+
+function sendMessage() {
+  let inputVal = chatInput.value
+  let nameFormatted = `<b>${firebase.auth().currentUser.displayName}:</b> `
+  writeMessageToDatabase(nameFormatted, inputVal)
+}
+
+function makeRandomNames(allTheNames) {
   let randomNames = []
   for (let i = 0; i < 40; i++) {
     randomNames.push(allTheNames[Math.floor(Math.random() * allTheNames.length)])
@@ -15,7 +58,7 @@ function getRandomNames(allTheNames) {
 const fetchNames = async () => {
   const response = await fetch("https://data.ssb.no/api/v0/no/table/10501")
   const results = await response.json()
-  return getRandomNames(results.variables[0].valueTexts)
+  return makeRandomNames(results.variables[0].valueTexts)
 }
 
 const startNameGenerator = async() => {
@@ -26,13 +69,14 @@ const startNameGenerator = async() => {
   }
   function timer(i, name) { 
    setTimeout(function() { 
-    displayName.innerHTML = name
+    displayGeneratedName.innerHTML = name
     if (generatedUserName === name) joinChatButton.style.display = 'block'
    }, 1 * i * i ) 
  }
 }
 
 function startChat() {
+  joinChatButton.innerHTML = '<span class="loader"></span>'
   //Sign in new user anonymously
   firebase.auth().signInAnonymously().catch(function(error) {
     alert(error.code + ' | ' + error.message)
@@ -46,6 +90,8 @@ function startChat() {
       }).then(function() {
         // Simple "router". Chat is shown when user is successfully
         // logged in and assigned the generated name
+        let joinedChatName = '*' + firebase.auth().currentUser.displayName
+        writeMessageToDatabase(joinedChatName, "har flyttet inn i kommunen")
         landingContent.style.display = 'none'
         chatContent.style.display = 'flex'
       }).catch(function(error) {
