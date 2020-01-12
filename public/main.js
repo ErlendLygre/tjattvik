@@ -7,7 +7,7 @@ const chat = document.getElementById("chat")
 const chatInput = document.getElementById("chatInput")
 
 // Watches database, populates chat upon changes
-firebase.database().ref('messages').limitToLast(10)
+firebase.database().ref('messages').limitToLast(12)
     .on('value', (value) => {
       let messageKeys = Object.keys(value.val())
       let messagesArray = []
@@ -35,12 +35,18 @@ function populateChat(messagesToPopulate) {
 }
 
 function writeMessageToDatabase(name, message, uid) {
-  firebase.database().ref('messages').push({ 
-    message: message, 
-    displayName: name,
-    uid: firebase.auth().currentUser.uid
-  })
-  chatInput.value = ''
+  if (message.length > 100) {
+    alert('Meldingen din kan ikke være mer enn 100 tegn')
+  } else if (message.includes("<")) {
+    alert('Vi liker ikke symbolet < her i tjattvik')
+  } else {
+    firebase.database().ref('messages').push({ 
+      message: message, 
+      displayName: name,
+      uid: firebase.auth().currentUser.uid
+    })
+    chatInput.value = ''
+  }
 }
 
 function sendMessage() {
