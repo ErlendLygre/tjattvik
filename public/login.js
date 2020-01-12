@@ -23,7 +23,6 @@ chatInput.addEventListener("keyup", function(event) {
   if (event.keyCode === 13) {
       event.preventDefault()
       document.getElementById("send-message-button").click()
-      chatInput.value = ''
   }
 });
 
@@ -39,6 +38,7 @@ function writeMessageToDatabase(name, message) {
     message: message, 
     displayName: name
   })
+  chatInput.value = ''
 }
 
 function sendMessage() {
@@ -71,7 +71,7 @@ const startNameGenerator = async() => {
    setTimeout(function() { 
     displayGeneratedName.innerHTML = name
     if (generatedUserName === name) joinChatButton.style.display = 'block'
-   }, 1 * i * i ) 
+   }, 2.2 * i * i ) 
  }
 }
 

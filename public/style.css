@@ -91,3 +91,10 @@ input {
 		opacity: 0;
 	}
 }
+
+@media only screen and (max-width: 600px) {
+  #landing-content, #chat-content {
+    width: 75%;
+  }
+}
+
