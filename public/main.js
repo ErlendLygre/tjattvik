@@ -1,4 +1,4 @@
-let generatedUserName = '........';
+let generatedUserName = '........'
 const displayGeneratedName = document.getElementById("name")
 const joinChatButton = document.getElementById("join-chat-button")
 const landingContent = document.getElementById("landing-content")
@@ -6,6 +6,7 @@ const chatContent = document.getElementById("chat-content")
 const chat = document.getElementById("chat")
 const chatInput = document.getElementById("chatInput")
 
+// Watches database, populates chat upon changes
 firebase.database().ref('messages').limitToLast(10)
     .on('value', (value) => {
       let messageKeys = Object.keys(value.val())
@@ -24,7 +25,7 @@ chatInput.addEventListener("keyup", function(event) {
       event.preventDefault()
       document.getElementById("send-message-button").click()
   }
-});
+})
 
 function populateChat(messagesToPopulate) {
   chat.innerHTML = ''
@@ -33,10 +34,11 @@ function populateChat(messagesToPopulate) {
   })
 }
 
-function writeMessageToDatabase(name, message) {
+function writeMessageToDatabase(name, message, uid) {
   firebase.database().ref('messages').push({ 
     message: message, 
-    displayName: name
+    displayName: name,
+    uid: firebase.auth().currentUser.uid
   })
   chatInput.value = ''
 }
@@ -47,6 +49,7 @@ function sendMessage() {
   writeMessageToDatabase(nameFormatted, inputVal)
 }
 
+//--- Name generator functions
 function makeRandomNames(allTheNames) {
   let randomNames = []
   for (let i = 0; i < 40; i++) {
@@ -62,6 +65,7 @@ const fetchNames = async () => {
 }
 
 const startNameGenerator = async() => {
+  if (firebase.auth().currentUser !== null) firebase.auth().currentUser.delete()
   let names = await fetchNames()
   generatedUserName = names[names.length-1]
   for (let i=0; i<40; i++) {
@@ -75,6 +79,7 @@ const startNameGenerator = async() => {
  }
 }
 
+
 function startChat() {
   joinChatButton.innerHTML = '<span class="loader"></span>'
   //Sign in new user anonymously
@@ -84,7 +89,7 @@ function startChat() {
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
       //Set the current user's display name to the generatedUserName
-      var current = firebase.auth().currentUser;
+      var current = firebase.auth().currentUser
       current.updateProfile({
         displayName: generatedUserName,
       }).then(function() {
@@ -96,21 +101,23 @@ function startChat() {
         chatContent.style.display = 'flex'
       }).catch(function(error) {
         alert('Kunne ikke oppdatere brukeren med nytt navn')
-      });
+      })
     } else {
       // Chat cannot be shown when user doesn't exist
       chatContent.style.display = 'none'
       landingContent.style.display = 'flex'
     }
-  });
+  })
 }
 
-function endSession() {
-  firebase.auth().currentUser.delete().then(function() {
-    startNameGenerator()
-  }).catch(function(error) {
-    alert('Kunne ikke forlate Tjattvik. Du må bli her for alltid')
-});
-}
+// Activate to add a "leave chat"-button
+
+// function endSession() {
+//   firebase.auth().currentUser.delete().then(function() {
+//     startNameGenerator()
+//   }).catch(function(error) {
+//     alert('Kunne ikke forlate Tjattvik. Du må bli her for alltid')
+// })
+// }
 
 startNameGenerator()

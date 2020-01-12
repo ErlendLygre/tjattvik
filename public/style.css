@@ -9,6 +9,7 @@ body {
   line-height: 2rem;
 }
 
+/* Basic element styling */
 p {
   line-height: 1rem;
 }
@@ -20,26 +21,6 @@ h3 {
 
 img {
   align-self: center;
-}
-
-#landing-content, #chat-content {
-  display: flex;
-  flex-direction: column;
-  min-height: 45vh;
-  width: 400px;
-  margin: 0 auto;
-  background-color: rgb(255, 250, 250, 0.8);
-  border-radius: 20px;
-  padding: 40px;
-}
-
-#chat-content {
-  display: none;
-}
-
-#join-chat-button {
-  display: none;
-  margin-top: 50px;
 }
 
 button {
@@ -61,6 +42,28 @@ button:hover {
 input {
   height: 35px;
   font-size: 2rem;
+}
+
+/* Named element styling */
+
+#landing-content, #chat-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 45vh;
+  width: 400px;
+  margin: 0 auto;
+  background-color: rgb(255, 250, 250, 0.8);
+  border-radius: 20px;
+  padding: 40px;
+}
+
+#chat-content {
+  display: none;
+}
+
+#join-chat-button {
+  display: none;
+  margin-top: 50px;
 }
 
 #name {
